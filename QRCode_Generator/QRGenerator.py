@@ -35,7 +35,7 @@ save_image = ctk.CTkImage(Image.open("ImageResources\\save.png"), size=(20,20))
 class QRGenerator:
     def __init__(self):
         self.window = ctk.CTk()
-        self.window.geometry("400x700")
+        self.window.geometry("400x680")
         self.window.resizable(False, False)
         self.window.title("AppStaticsX™-QRGenerator")
         self.window.iconbitmap(r'ImageResources\\icon.ico')
@@ -89,7 +89,7 @@ class QRGenerator:
         self.option_frame = ctk.CTkFrame(self.window, width=350, corner_radius=5, border_color=BORDER_COLOR, fg_color="transparent")
         self.option_frame.pack(pady=10)
 
-        self.name_entry = ctk.CTkEntry(self.option_frame, width=150, height=30, placeholder_text="Enter QR Name", font=SMALL_FONT_STYLE)
+        self.name_entry = ctk.CTkEntry(self.option_frame, width=180, height=30, placeholder_text="Enter QR Name", font=SMALL_FONT_STYLE)
         self.name_entry.pack(side="left", padx=20)
 
         self.btn_update = ctk.CTkButton(self.option_frame, height=30, width=100, image=generate_image, text="GENERATE", text_color=LABEL_COLOR, fg_color="#23ACEF", hover_color=BTN_HOVER, font=DEFAULT_FONT_STYLE, command=self.update_qr_to_qr_lable)
@@ -104,7 +104,7 @@ class QRGenerator:
         self.qr_label.pack(fill="x", pady =15, padx=30)
 
         self.btn_save = ctk.CTkButton(self.qr_frame, height=30, width=120, image=save_image, text="SAVE AS PNG", text_color=LABEL_COLOR, fg_color="#0E8849", hover_color=BTN_HOVER, font=DEFAULT_FONT_STYLE, command=self.save_qr)
-        self.btn_save.pack(pady=15)
+        self.btn_save.pack_forget()
 
 
     #handle save button
@@ -126,22 +126,33 @@ class QRGenerator:
           self.txt_box.delete("1.0", "end-1c")
 
 
+    
     #handle generate button
     def update_qr_to_qr_lable(self):
         text = self.txt_box.get("1.0", "end-1c")
-        
-        # Generate QR code
+
+        qrname = self.name_entry.get()
+
+        if not qrname:
+          self.name_entry.configure(placeholder_text="Please Name Your QRCode", placeholder_text_color=WARN_COLOR)
+          return
+    
+    # Generate QR code
         qr = qrcode.make(text)
-        
-        # Resize QR code image to fit the label
+            
+            # Resize QR code image to fit the label
         qr = qr.resize((350, 350))
-        
-        # Convert QR code image to PhotoImage
+            
+            # Convert QR code image to PhotoImage
         qr_image = ImageTk.PhotoImage(qr)
-        
-        # Update QR image in the label
+    
+    # Update QR image in the label
         self.qr_label.configure(image=qr_image)
         self.qr_label.image = qr_image  # Keep a reference to prevent garbage collection
+    
+    # Show the save button
+        self.btn_save.pack(padx=20, pady=10)
+    # Keep a reference to prevent garbage collection
 
 
     #handle uppercase button
@@ -180,13 +191,13 @@ class QRGenerator:
 
     #handle italic button (not working properly)
     def italic(self):
-        # Get the selected text in the textbox
-        start_index = self.txt_box.index("sel.first")
-        end_index = self.txt_box.index("sel.last")
-        
-        # Apply italic font to the selected text
-        self.txt_box.tag_add("italic", start_index, end_index)
-        self.txt_box.tag_config("italic", italic=True)
+    # Get the selected text in the textbox
+     start_index = self.txt_box.index("sel.first")
+     end_index = self.txt_box.index("sel.last")
+    
+    # Apply italic font to the selected text
+     self.txt_box.tag_add("italic", start_index, end_index)
+     self.txt_box.tag_config("italic", font=("Arial", 12, "italic"))
 
 
     #handle underline button
@@ -217,7 +228,7 @@ class QRGenerator:
         
         # Apply bold font to the selected text
         self.txt_box.tag_add("bold", start_index, end_index)
-        self.txt_box.tag_config("bold", font=(self.txt_box.cget("font"), "bold"))
+        self.txt_box.tag_config("bold", bold=True)
         
     def run(self):
         self.window.mainloop()
