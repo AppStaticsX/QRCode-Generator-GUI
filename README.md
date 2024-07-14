@@ -1,8 +1,8 @@
 Simple QR Code Generator using Python
 
-Used Modules
+Used libraries
 1. Customtkinter
 2. Pillow
 3. qrcode
 
-Install Modules
+Install libraries - pip install customtkinter pillow qrcode
